@@ -1,23 +1,15 @@
 import express from "express";
+import axios from "axios";
+import dotenv from "dotenv";
 
-import JwtAuth from "./middleware/jwtAuth.js";
-import loginRoute from "./route/loginRoute.js"
-import registerRoute from "./route/registerRoute.js"
-import joblistRoute from "./route/jobList.js"
-import { PORT } from "./controller/jobList.js";
+dotenv.config();
 
-const app = express();
+export const { URLLIST, TOKEN, URLDB, PORT } = process.env;
+export let jobListDB;
+export const app = express();
 
-export let job = ''
+(async function GetJobList() {
+  jobListDB = await axios(URLLIST);
+})();
 
 app.use(express.json());
-
-app.use("/", registerRoute)
-
-app.use("/", JwtAuth, loginRoute )
-
-app.use("/", JwtAuth, joblistRoute)
-
-
-app.listen(PORT);
-

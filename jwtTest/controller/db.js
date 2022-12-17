@@ -1,5 +1,5 @@
-import mongoose from "mongoose"
-import {URLDB} from "./jobList.js"
+import mongoose from "mongoose";
+import { URLDB } from "../app.js";
 
 mongoose.set("strictQuery", true);
 mongoose.connect(URLDB);

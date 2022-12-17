@@ -1,16 +1,13 @@
-import axios from "axios";
-import dotenv from "dotenv";
-dotenv.config();
-
-export const { URLLIST, TOKEN, URLDB, PORT } = process.env;
-export let jobListDB;
+import { jobListDB } from "../app.js";
 
 export default async (req, res) => {
   const { location, description, full_time } = req.query;
+  let { page, limit } = req.query;
+
+  if (!(location || description || page || full_time))
+    return res.send("Illegal Keyword");
 
   const isFullTime = full_time == "true" ? true : null;
-
-  if (!jobListDB) jobListDB = await axios(URLLIST);
 
   const result = jobListDB.data.filter((item) => {
     if (location && description && isFullTime) {
@@ -31,9 +28,9 @@ export default async (req, res) => {
     else return item;
   });
 
-  const page = parseInt(req.query.page);
-  const limit = parseInt(req.query.limit);
-
+  page = parseInt(req.query.page);
+  limit = parseInt(req.query.limit);
+  if (page && !limit) limit = 5;
   if (!(page && limit)) return res.send(result);
 
   const startIndex = (page - 1) * limit;
@@ -44,7 +41,7 @@ export default async (req, res) => {
 
   remainingContent > 0 ? remainingContent : (remainingContent = 0);
 
-  if (page * limit > result.length + 3) return res.send("page not found");
+  if (page * limit > result.length + 3) return res.send("page not found!");
 
   res.send({
     page,

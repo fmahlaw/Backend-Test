@@ -1,5 +1,5 @@
 import  jwt  from "jsonwebtoken";
-import { TOKEN } from "../controller/jobList.js";
+import { TOKEN } from "../app.js";
 
 export default async function JwtAuth(req, res, next) {
     const userHeader = req.headers.authorization;
